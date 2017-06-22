@@ -36,6 +36,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JComboBox;
 
 
 //https://docs.oracle.com/javase/tutorial/uiswing/components/formattedtextfield.html
@@ -46,21 +47,17 @@ public class AlterarDados {
 	
 	
 	private String resultado, data, passaporte, medico, modalidade;
-	private boolean reprovado, salvo;
+	private boolean reprovado;
 	private JFrame frmAdicionar;
 	//private boolean reprovado;
 	private JTextField diagnosticoTextField;
 	private Connection c;
+	//private JTextField textField;
 	
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	private void janelaAlterarDados(){
-		
-		
-		JTextField passaporteTextField;
-		JTextField medicoTextField;
-		JTextField modalidadeTextField;
 		JTextArea resultadoTextArea;
 		JFormattedTextField dataTextField;
 		frmAdicionar = new JFrame();
@@ -120,37 +117,102 @@ public class AlterarDados {
 		btnSalvar.setBounds(164, 227, 89, 23);
 		frmAdicionar.getContentPane().add(btnSalvar);
 		
-		//diagnosticoTextField = new JTextField();
+		/*diagnosticoTextField = new JTextField();
 		diagnosticoTextField.setBounds(23, 62, 86, 20);
 		frmAdicionar.getContentPane().add(diagnosticoTextField);
-		diagnosticoTextField.setColumns(10);
+		diagnosticoTextField.setColumns(10);*/
 		
 		JLabel lblPassaporte = new JLabel("Passaporte");
 		lblPassaporte.setBounds(256, 37, 62, 14);
 		frmAdicionar.getContentPane().add(lblPassaporte);
 		
-		passaporteTextField = new JTextField();
-		passaporteTextField.setBounds(256, 62, 86, 20);
-		frmAdicionar.getContentPane().add(passaporteTextField);
-		passaporteTextField.setColumns(10);
-		
-		medicoTextField = new JTextField();
-		medicoTextField.setBounds(374, 62, 86, 20);
-		frmAdicionar.getContentPane().add(medicoTextField);
-		medicoTextField.setColumns(10);
-		
 		JLabel lblCodigoDoMdico = new JLabel("C\u00F3digo do m\u00E9dico");
 		lblCodigoDoMdico.setBounds(374, 37, 95, 14);
 		frmAdicionar.getContentPane().add(lblCodigoDoMdico);
 		
-		modalidadeTextField = new JTextField();
-		modalidadeTextField.setBounds(495, 62, 86, 20);
-		frmAdicionar.getContentPane().add(modalidadeTextField);
-		modalidadeTextField.setColumns(10);
-		
 		JLabel lblNewLabel_1 = new JLabel("C\u00F3digo da modalidade");
 		lblNewLabel_1.setBounds(495, 37, 108, 14);
 		frmAdicionar.getContentPane().add(lblNewLabel_1);
+		
+		JComboBox<String> passaporteComboBox = new JComboBox<String>();
+		
+		try{
+			int index = 0;
+			Statement stmt;
+	        ResultSet rs;
+			stmt = c.createStatement();
+	        rs = stmt.executeQuery("select passaporte from atleta");
+	        while(rs.next()){
+	        	passaporteComboBox.insertItemAt(rs.getString("passaporte"), index++);
+		        //System.out.println(rs.getString("novocodigo"));
+		        //diagnosticoTextField.setText(rs.getString("novocodigo").toString());
+	        	
+	        }
+	        passaporteComboBox.setMaximumRowCount(index+1);
+	    }catch(Exception e){
+	     	e.printStackTrace();
+	    }
+		
+		passaporteComboBox.setBounds(256, 62, 97, 20);
+		frmAdicionar.getContentPane().add(passaporteComboBox);
+		
+		diagnosticoTextField = new JTextField();
+		
+	
+		try{
+			Statement stmt;
+	        ResultSet rs;
+			stmt = c.createStatement();
+	        rs = stmt.executeQuery("select nvl(max(codigo)+1,0) as novocodigo from examedoping");
+	        rs.next();
+	        System.out.println(rs.getString("novocodigo"));
+	        diagnosticoTextField.setText(rs.getString("novocodigo").toString());
+	    }catch(Exception e){
+	     	e.printStackTrace();
+	    }
+		diagnosticoTextField.setEnabled(false);
+		diagnosticoTextField.setEditable(false);
+		diagnosticoTextField.setBounds(23, 62, 86, 20);
+		frmAdicionar.getContentPane().add(diagnosticoTextField);
+		diagnosticoTextField.setColumns(10);
+		
+		JComboBox<Object> medicoComboBox = new JComboBox<Object>();
+		try{
+			int index = 0;
+			Statement stmt;
+	        ResultSet rs;
+			stmt = c.createStatement();
+	        rs = stmt.executeQuery("select codigo from medico");
+	        while(rs.next()){
+	        	medicoComboBox.insertItemAt(rs.getString("codigo"), index++);
+		        //System.out.println(rs.getString("novocodigo"));
+		        //diagnosticoTextField.setText(rs.getString("novocodigo").toString());
+	        	
+	        }
+	    }catch(Exception e){
+	     	e.printStackTrace();
+	    }
+		medicoComboBox.setBounds(374, 62, 85, 20);
+		frmAdicionar.getContentPane().add(medicoComboBox);
+		
+		JComboBox<String> modalidadeComboBox = new JComboBox<String>();
+		try{
+			int index = 0;
+			Statement stmt;
+	        ResultSet rs;
+			stmt = c.createStatement();
+	        rs = stmt.executeQuery("select codigo from modalidadeesportiva");
+	        while(rs.next()){
+	        	modalidadeComboBox.insertItemAt(rs.getString("codigo"), index++);
+		        //System.out.println(rs.getString("novocodigo"));
+		        //diagnosticoTextField.setText(rs.getString("novocodigo").toString());
+	        	
+	        }
+	    }catch(Exception e){
+	     	e.printStackTrace();
+	    }
+		modalidadeComboBox.setBounds(495, 62, 86, 20);
+		frmAdicionar.getContentPane().add(modalidadeComboBox);
 		
 		//botar aqui a sql querry
 		btnSalvar.addActionListener(new ActionListener() {
@@ -159,9 +221,9 @@ public class AlterarDados {
 				//data = dataTextField.getText();
 				resultado = resultadoTextArea.getText();
 				reprovado = chckbxReprovado.isSelected();
-				passaporte = passaporteTextField.getText();
-				medico = medicoTextField.getText();
-				modalidade = modalidadeTextField.getText();
+//				passaporte = passaporteTextField.getText();
+//				medico = medicoTextField.getText();
+//				modalidade = modalidadeTextField.getText();
 				try {
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 					Date d = df.parse(dataTextField.getText());
@@ -177,7 +239,6 @@ public class AlterarDados {
 				System.out.println(modalidade);
 				frmAdicionar.setVisible(false);
 				insertQuery();
-				salvo = true;
 				return;
 			}
 		});
@@ -197,24 +258,8 @@ public class AlterarDados {
 		return true;
 	}*/
 	public AlterarDados(Connection connection){
-		salvo = false;
-		Statement stmt;
-        ResultSet rs;
 		c = connection;
-	
-		try{
-			  stmt = c.createStatement();
-			  diagnosticoTextField = new JTextField();
-			  diagnosticoTextField.setEnabled(false);
-			  diagnosticoTextField.setEnabled(false);
-	          rs = stmt.executeQuery("select nvl(max(codigo)+1,0) as novocodigo from examedoping");
-	          rs.next();
-	          System.out.println(rs.getString("novocodigo"));
-	          diagnosticoTextField.setText(rs.getString("novocodigo").toString());
-	          janelaAlterarDados();
-	    }catch(Exception e){
-	     	e.printStackTrace();
-	    }
+		janelaAlterarDados();
 		
 		
 	}
@@ -224,7 +269,7 @@ public class AlterarDados {
 			if(reprovado == true) ireprovado = 1;
 			else ireprovado = 0;
 			PreparedStatement pstmt = c.prepareStatement("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
-			System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
+			//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (SQLException e) {
@@ -232,7 +277,6 @@ public class AlterarDados {
 		}
 	}
 	public AlterarDados(){
-		salvo = false;
 		
 		//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");    
 		janelaAlterarDados();
