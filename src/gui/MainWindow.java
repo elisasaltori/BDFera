@@ -7,37 +7,16 @@ package gui;
 import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.io.BufferedReader;
-
-import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.SpringLayout;
 import javax.swing.table.DefaultTableModel;
-
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.AbstractListModel;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import javax.swing.BoxLayout;
-import java.awt.Component;
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
-import java.awt.FlowLayout;
 import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.JTextArea;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -61,11 +40,11 @@ public class MainWindow {
 	/**
 	 * Ativa a aplicacao
 	 */
-	public static void main(String[] args) {
+	public static void runWindow(Connection connection) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow window = new MainWindow();
+					MainWindow window = new MainWindow(connection);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -77,28 +56,11 @@ public class MainWindow {
 	/**
 	 * Cria a aplicacao
 	 */
-	public MainWindow() {
+	public MainWindow(Connection connection) {
+		this.connection=connection;
 		initialize();
-			
 	}
-	/**
-	 * Funcao que estabelece uma conexao com o banco de dados.
-	 * @return Objeto Connection se a conexao foi efetuada com sucesso; null se houve erro
-	 */
-	public Connection Connect(){
-		 Connection connection;
-		 try{
-		 Class.forName("oracle.jdbc.driver.OracleDriver");
-         connection = DriverManager.getConnection(
-                 "jdbc:oracle:thin:@grad.icmc.usp.br:15215:orcl",
-                 "8551100",
-                 "grupofera");
-         	return connection;
-		 }catch(Exception e){
-			 e.printStackTrace();
-			 return null;
-		 }
-	}
+	
 	
 	/**
 	 * Apaga do banco de dados um registro ExameDoping de codigo id.
@@ -325,7 +287,7 @@ public class MainWindow {
 		tabelaExames.getColumnModel().getColumn(6).setMinWidth(5);
 		
 		
-		this.connection=this.Connect();
+		
 		if(this.connection==null){
 			System.out.println("Conexao nao estabelecida!");
 			System.exit(2);
