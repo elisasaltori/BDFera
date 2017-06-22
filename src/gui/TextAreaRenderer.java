@@ -5,9 +5,13 @@ import java.awt.Component;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.TableCellRenderer;
 
+/**
+ * Classe auxiliar para a criacao de uma coluna da tabela. Estabelece uma celula de TextArea com scrollbar.
+ * 
+ *
+ */
 public class TextAreaRenderer extends JScrollPane implements TableCellRenderer
 {
 	   JTextArea textarea;

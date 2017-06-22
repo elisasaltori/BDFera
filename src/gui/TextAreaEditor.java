@@ -8,10 +8,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
+/**
+ * Classe auxiliar para a criacao de uma coluna da tabela. Estabelece um editor para umaa celula de TextArea com scrollbar.
+ * 
+ *
+ */
 public class TextAreaEditor extends DefaultCellEditor {
 	   protected JScrollPane scrollpane;
 	   protected JTextArea textarea;
-	  
+  
 	   public TextAreaEditor() {
 	      super(new JCheckBox());
 	      scrollpane = new JScrollPane();
@@ -19,6 +24,7 @@ public class TextAreaEditor extends DefaultCellEditor {
 	      textarea.setLineWrap(true);
 	      textarea.setWrapStyleWord(true);
 	      scrollpane.getViewport().add(textarea);
+	  
 	   }
 	   
 	   public void setEditable(boolean op){
@@ -28,7 +34,7 @@ public class TextAreaEditor extends DefaultCellEditor {
 	   public Component getTableCellEditorComponent(JTable table, Object value,
 	                                   boolean isSelected, int row, int column) {
 	      textarea.setText((String) value);
-	  
+	   
 	      return scrollpane;
 	   }
 	  
