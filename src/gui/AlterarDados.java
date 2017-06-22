@@ -97,6 +97,9 @@ public class AlterarDados {
 		frmAdicionar.getContentPane().add(lblResultado);
 		
 		resultadoTextArea = new JTextArea();
+		resultadoTextArea.setWrapStyleWord(true);
+		resultadoTextArea.setLineWrap(true);
+
 		resultadoTextArea.setBounds(23, 154, 446, 47);
 		frmAdicionar.getContentPane().add(resultadoTextArea);
 		
