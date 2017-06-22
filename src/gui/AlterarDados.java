@@ -32,7 +32,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 
@@ -43,16 +45,18 @@ public class AlterarDados {
 	
 	
 	
-	private String resultado, data;
-	private boolean reprovado;
-	JTextField diagnosticoTextField;
+	private String resultado, data, passaporte, medico, modalidade;
+	private boolean reprovado, salvo;
+	private JFrame frmAdicionar;
+	//private boolean reprovado;
+	private JTextField diagnosticoTextField;
 	private Connection c;
 	
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	private void janelaAlterarDados(){
-		JFrame frmAdicionar;
+		
 		
 		JTextField passaporteTextField;
 		JTextField medicoTextField;
@@ -109,27 +113,7 @@ public class AlterarDados {
 		frmAdicionar.getContentPane().add(dataTextField);
 		dataTextField.setColumns(10);
 		 
-		//botar aqui a sql querry
-		btnSalvar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				System.out.println("Estou pressionado");
-				//data = dataTextField.getText();
-				resultado = resultadoTextArea.getText();
-				reprovado = chckbxReprovado.isSelected();
-				try {
-					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-					Date d = df.parse(dataTextField.getText());
-					data = df.format(d);
-				} catch (ParseException e1) {
-					JOptionPane.showMessageDialog(null, "Digite uma data no formato dd/MM/yyyy");
-				}
-				System.out.println(data);
-				System.out.println(resultado);
-				System.out.println(reprovado);
-
-
-			}
-		});
+		
 		btnSalvar.setBounds(164, 227, 89, 23);
 		frmAdicionar.getContentPane().add(btnSalvar);
 		
@@ -166,29 +150,89 @@ public class AlterarDados {
 		JLabel lblNewLabel_1 = new JLabel("C\u00F3digo da modalidade");
 		lblNewLabel_1.setBounds(495, 37, 108, 14);
 		frmAdicionar.getContentPane().add(lblNewLabel_1);
+		
+		//botar aqui a sql querry
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Estou pressionado");
+				//data = dataTextField.getText();
+				resultado = resultadoTextArea.getText();
+				reprovado = chckbxReprovado.isSelected();
+				passaporte = passaporteTextField.getText();
+				medico = medicoTextField.getText();
+				modalidade = modalidadeTextField.getText();
+				try {
+					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+					Date d = df.parse(dataTextField.getText());
+					data = df.format(d);
+				} catch (ParseException e1) {
+					JOptionPane.showMessageDialog(null, "Digite uma data no formato dd/MM/yyyy");
+				}
+				System.out.println(data);
+				System.out.println(resultado);
+				System.out.println(reprovado);
+				System.out.println(passaporte);
+				System.out.println(medico);
+				System.out.println(modalidade);
+				frmAdicionar.setVisible(false);
+				salvo = true;
+				return;
+			}
+		});
+		frmAdicionar.setVisible(true);
+		while(salvo != true){
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
 	}
 	/*public static boolean AlterarDados(int key){
 		return true;
 	}*/
 	public AlterarDados(Connection connection){
+		salvo = false;
 		Statement stmt;
         ResultSet rs;
 		c = connection;
 		try{
 			  stmt = c.createStatement();
-	          rs = stmt.executeQuery("select nvl(max(codigo)+1) from examedopping");
+			  diagnosticoTextField = new JTextField();
+	          rs = stmt.executeQuery("select nvl(max(codigo)+1) from examedoping");
 	          diagnosticoTextField.setText(rs.getString("NVL(MAX(CODIGO)+1, 0)"));
-	     }catch(Exception e){
+	          janelaAlterarDados();
+	    }catch(Exception e){
 	     	e.printStackTrace();
-	     }
-		
-		janelaAlterarDados();
-	}
-	public static void main(String args[]) throws InterruptedException{
-		//AlterarDados j = new AlterarDados();
-		//j.frmAdicionar.setVisible(true);
-		while(true){
-			Thread.sleep(1000);
+	    }
+		try {
+			int ireprovado;
+			if(reprovado == true) ireprovado = 1;
+			else ireprovado = 0;
+			PreparedStatement pstmt = c.prepareStatement("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		
+	}
+	public AlterarDados(){
+		salvo = false;
+		
+		//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");    
+		janelaAlterarDados();
+		//	System.out.println("Saiu");
+	}
+	
+	public static void main(String args[]) throws InterruptedException{
+
+		AlterarDados j = new AlterarDados();
+		//j.frmAdicionar.setVisible(true);
+		/*while(true){
+			Thread.sleep(1000);
+		}*/
 	}
 }
