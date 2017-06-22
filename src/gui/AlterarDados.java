@@ -120,9 +120,7 @@ public class AlterarDados {
 		btnSalvar.setBounds(164, 227, 89, 23);
 		frmAdicionar.getContentPane().add(btnSalvar);
 		
-		diagnosticoTextField = new JTextField();
-		diagnosticoTextField.setEditable(false);
-		diagnosticoTextField.setEnabled(false);
+		//diagnosticoTextField = new JTextField();
 		diagnosticoTextField.setBounds(23, 62, 86, 20);
 		frmAdicionar.getContentPane().add(diagnosticoTextField);
 		diagnosticoTextField.setColumns(10);
@@ -178,6 +176,7 @@ public class AlterarDados {
 				System.out.println(medico);
 				System.out.println(modalidade);
 				frmAdicionar.setVisible(false);
+				insertQuery();
 				salvo = true;
 				return;
 			}
@@ -206,24 +205,31 @@ public class AlterarDados {
 		try{
 			  stmt = c.createStatement();
 			  diagnosticoTextField = new JTextField();
+			  diagnosticoTextField.setEnabled(false);
+			  diagnosticoTextField.setEnabled(false);
 	          rs = stmt.executeQuery("select nvl(max(codigo)+1,0) as novocodigo from examedoping");
 	          rs.next();
-	          diagnosticoTextField.setText(rs.getString("novocodigo"));
+	          System.out.println(rs.getString("novocodigo"));
+	          diagnosticoTextField.setText(rs.getString("novocodigo").toString());
 	          janelaAlterarDados();
 	    }catch(Exception e){
 	     	e.printStackTrace();
 	    }
+		
+		
+	}
+	private void insertQuery(){
 		try {
 			int ireprovado;
 			if(reprovado == true) ireprovado = 1;
 			else ireprovado = 0;
 			PreparedStatement pstmt = c.prepareStatement("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
+			System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	public AlterarDados(){
 		salvo = false;
