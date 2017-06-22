@@ -183,14 +183,15 @@ public class AlterarDados {
 			}
 		});
 		frmAdicionar.setVisible(true);
-		while(salvo != true){
+		//ISSO FAZ SUA JANELA NAO FAZER NADA D:
+		/*while(salvo != true){
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}
+		}*/
 		
 	}
 	/*public static boolean AlterarDados(int key){
@@ -201,11 +202,13 @@ public class AlterarDados {
 		Statement stmt;
         ResultSet rs;
 		c = connection;
+	
 		try{
 			  stmt = c.createStatement();
 			  diagnosticoTextField = new JTextField();
-	          rs = stmt.executeQuery("select nvl(max(codigo)+1) from examedoping");
-	          diagnosticoTextField.setText(rs.getString("NVL(MAX(CODIGO)+1, 0)"));
+	          rs = stmt.executeQuery("select nvl(max(codigo)+1,0) as novocodigo from examedoping");
+	          rs.next();
+	          diagnosticoTextField.setText(rs.getString("novocodigo"));
 	          janelaAlterarDados();
 	    }catch(Exception e){
 	     	e.printStackTrace();

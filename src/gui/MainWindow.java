@@ -99,6 +99,11 @@ public class MainWindow {
 	     }
 	}
 	
+	public void updateTable(){
+		emptyTable();
+		fillTable();
+	}
+	
 	/**
 	 * Esvazia totalmente a tabela
 	 */
@@ -181,6 +186,12 @@ public class MainWindow {
 		//Botoes para manipulacao dos exames
 		
 		JButton botaoInserir = new JButton("Inserir novo exame");
+		botaoInserir.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				new AlterarDados(connection);
+			}
+		});
 		springLayout.putConstraint(SpringLayout.NORTH, botaoInserir, 100, SpringLayout.NORTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, botaoInserir, 15, SpringLayout.EAST, examesScroll);
 		springLayout.putConstraint(SpringLayout.EAST, botaoInserir, -10, SpringLayout.EAST, frame.getContentPane());
@@ -193,6 +204,17 @@ public class MainWindow {
 		frame.getContentPane().add(botaoInserir);
 		
 		JButton botaoAlterar = new JButton("Alterar exame selecionado");
+		botaoAlterar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				/*int row=tabelaExames.getSelectedRow();
+				if(row!=-1){
+					String str=(String)tabelaExames.getModel().getValueAt(row, 0); //Pega id do registro
+					int id=Integer.parseInt(str);
+					new AlterarDados(connection, id);
+				}*/
+			}
+		});
 		springLayout.putConstraint(SpringLayout.WEST, botaoAlterar, 15, SpringLayout.EAST, examesScroll);
 		springLayout.putConstraint(SpringLayout.EAST, botaoAlterar, -10, SpringLayout.EAST, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, botaoInserir, -6, SpringLayout.NORTH, botaoAlterar);
@@ -214,8 +236,7 @@ public class MainWindow {
 					String str=(String)tabelaExames.getModel().getValueAt(row, 0); //Pega id do registro
 					int id=Integer.parseInt(str);
 					deleteExam(id); //Remove registo do BD
-					emptyTable(); //Esvazia e preenche novamente tabela para atualizar valores
-					fillTable();
+					updateTable();
 				}
 			}
 		});
@@ -231,8 +252,7 @@ public class MainWindow {
 		botaoAtualizar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				emptyTable();
-				fillTable();
+				updateTable();
 			}
 		});
 		frame.getContentPane().add(botaoAtualizar);
