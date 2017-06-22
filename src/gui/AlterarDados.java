@@ -32,6 +32,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import java.beans.PropertyChangeListener;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 
 //https://docs.oracle.com/javase/tutorial/uiswing/components/formattedtextfield.html
@@ -167,7 +169,17 @@ public class AlterarDados {
 		return true;
 	}*/
 	public AlterarDados(Connection connection){
+		Statement stmt;
+        ResultSet rs;
 		c = connection;
+		try{
+			  stmt = c.createStatement();
+	          rs = stmt.executeQuery("select nvl(max(codigo)+1) from examedopping");
+	          diagnosticoTextField.setText(arg0);
+	     }catch(Exception e){
+	     	e.printStackTrace();
+	     }
+		
 		janelaAlterarDados();
 	}
 	public static void main(String args[]) throws InterruptedException{
