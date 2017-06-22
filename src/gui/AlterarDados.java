@@ -42,21 +42,23 @@ import java.sql.Statement;
 public class AlterarDados {
 	
 	
-	private JFrame frmAdicionar;
+	
 	private String resultado, data;
 	private boolean reprovado;
-	private JTextField diagnosticoTextField;
-	private JTextField passaporteTextField;
-	private JTextField medicoTextField;
-	private JTextField modalidadeTextField;
-	private JTextArea resultadoTextArea;
-	private JFormattedTextField dataTextField;
+	JTextField diagnosticoTextField;
 	private Connection c;
 	
 	/**
 	 * @wbp.parser.entryPoint
 	 */
 	private void janelaAlterarDados(){
+		JFrame frmAdicionar;
+		
+		JTextField passaporteTextField;
+		JTextField medicoTextField;
+		JTextField modalidadeTextField;
+		JTextArea resultadoTextArea;
+		JFormattedTextField dataTextField;
 		frmAdicionar = new JFrame();
 		
 		JButton btnSalvar = new JButton("Salvar");
@@ -175,7 +177,7 @@ public class AlterarDados {
 		try{
 			  stmt = c.createStatement();
 	          rs = stmt.executeQuery("select nvl(max(codigo)+1) from examedopping");
-	          diagnosticoTextField.setText(arg0);
+	          diagnosticoTextField.setText(rs.getString("NVL(MAX(CODIGO)+1, 0)"));
 	     }catch(Exception e){
 	     	e.printStackTrace();
 	     }
