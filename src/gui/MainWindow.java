@@ -158,27 +158,24 @@ public class MainWindow {
 		SpringLayout springLayout = new SpringLayout();
 		frame.getContentPane().setLayout(springLayout);
 		
-		JScrollPane examesScroll = new JScrollPane(tabelaExames); //Painel do tipo scroll em que esta contida a tabela
+		JScrollPane examesScroll = new JScrollPane(tabelaExames);
 		springLayout.putConstraint(SpringLayout.WEST, examesScroll, 21, SpringLayout.WEST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, examesScroll, -212, SpringLayout.EAST, frame.getContentPane());
 		frame.getContentPane().add(examesScroll);
 		
 		//Titulo da tabela
-		JLabel title = new JLabel("Exames de Doping"); 
+		JLabel title = new JLabel("Exames de Doping");
+		springLayout.putConstraint(SpringLayout.SOUTH, title, -412, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, examesScroll, 12, SpringLayout.SOUTH, title);
 		springLayout.putConstraint(SpringLayout.NORTH, title, 20, SpringLayout.NORTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, title, 36, SpringLayout.WEST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, title, -12, SpringLayout.NORTH, examesScroll);
 		springLayout.putConstraint(SpringLayout.EAST, title, 300, SpringLayout.WEST, frame.getContentPane());
 		title.setFont(new Font("Tahoma", Font.PLAIN, 32));
 		frame.getContentPane().add(title);
 		
 		//Titulo das opcoes de manipulacao dos exames
 		JLabel tituloOpcoes = new JLabel("Exames de doping:");
-		springLayout.putConstraint(SpringLayout.NORTH, examesScroll, 0, SpringLayout.NORTH, tituloOpcoes);
-		springLayout.putConstraint(SpringLayout.SOUTH, examesScroll, 347, SpringLayout.NORTH, tituloOpcoes);
-		springLayout.putConstraint(SpringLayout.EAST, examesScroll, -15, SpringLayout.WEST, tituloOpcoes);
-		springLayout.putConstraint(SpringLayout.WEST, tituloOpcoes, 797, SpringLayout.WEST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.EAST, tituloOpcoes, -22, SpringLayout.EAST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.NORTH, tituloOpcoes, 71, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.NORTH, tituloOpcoes, 102, SpringLayout.NORTH, frame.getContentPane());
 		tituloOpcoes.setFont(new Font("Arial", Font.BOLD, 13));
 		tituloOpcoes.setHorizontalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(tituloOpcoes);
@@ -186,16 +183,19 @@ public class MainWindow {
 		//Botoes para manipulacao dos exames
 		
 		JButton botaoInserir = new JButton("Inserir novo exame");
+		springLayout.putConstraint(SpringLayout.NORTH, botaoInserir, 131, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, botaoInserir, -317, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.WEST, tituloOpcoes, 0, SpringLayout.WEST, botaoInserir);
+		springLayout.putConstraint(SpringLayout.WEST, botaoInserir, 15, SpringLayout.EAST, examesScroll);
+		springLayout.putConstraint(SpringLayout.EAST, botaoInserir, -10, SpringLayout.EAST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, tituloOpcoes, -6, SpringLayout.NORTH, botaoInserir);
+		springLayout.putConstraint(SpringLayout.EAST, tituloOpcoes, 0, SpringLayout.EAST, botaoInserir);
 		botaoInserir.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				new AlterarDados(connection);
 			}
 		});
-		springLayout.putConstraint(SpringLayout.NORTH, botaoInserir, 100, SpringLayout.NORTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.WEST, botaoInserir, 15, SpringLayout.EAST, examesScroll);
-		springLayout.putConstraint(SpringLayout.EAST, botaoInserir, -10, SpringLayout.EAST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, tituloOpcoes, -6, SpringLayout.NORTH, botaoInserir);
 		botaoInserir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
@@ -204,6 +204,10 @@ public class MainWindow {
 		frame.getContentPane().add(botaoInserir);
 		
 		JButton botaoAlterar = new JButton("Alterar exame selecionado");
+		springLayout.putConstraint(SpringLayout.NORTH, botaoAlterar, 6, SpringLayout.SOUTH, botaoInserir);
+		springLayout.putConstraint(SpringLayout.WEST, botaoAlterar, 15, SpringLayout.EAST, examesScroll);
+		springLayout.putConstraint(SpringLayout.SOUTH, botaoAlterar, -288, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, botaoAlterar, 0, SpringLayout.EAST, tituloOpcoes);
 		botaoAlterar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -215,18 +219,13 @@ public class MainWindow {
 				}
 			}
 		});
-		springLayout.putConstraint(SpringLayout.WEST, botaoAlterar, 15, SpringLayout.EAST, examesScroll);
-		springLayout.putConstraint(SpringLayout.EAST, botaoAlterar, -10, SpringLayout.EAST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, botaoInserir, -6, SpringLayout.NORTH, botaoAlterar);
 		botaoAlterar.setFont(new Font("Arial", Font.BOLD, 12));
-		springLayout.putConstraint(SpringLayout.NORTH, botaoAlterar, 129, SpringLayout.NORTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, botaoAlterar, 152, SpringLayout.NORTH, frame.getContentPane());
 		frame.getContentPane().add(botaoAlterar);
 		
 		JButton botaoExcluir = new JButton("Excluir exame selecionado");
 		springLayout.putConstraint(SpringLayout.NORTH, botaoExcluir, 6, SpringLayout.SOUTH, botaoAlterar);
 		springLayout.putConstraint(SpringLayout.WEST, botaoExcluir, 15, SpringLayout.EAST, examesScroll);
-		springLayout.putConstraint(SpringLayout.EAST, botaoExcluir, -10, SpringLayout.EAST, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, botaoExcluir, 0, SpringLayout.EAST, tituloOpcoes);
 		botaoExcluir.setFont(new Font("Arial", Font.BOLD, 12));
 		botaoExcluir.addMouseListener(new MouseAdapter() {
 			@Override
@@ -245,7 +244,8 @@ public class MainWindow {
 		
 		//Botao para atualizacao da tabela
 		JButton botaoAtualizar = new JButton("Recarregar tabela");
-		springLayout.putConstraint(SpringLayout.NORTH, botaoAtualizar, 6, SpringLayout.SOUTH, examesScroll);
+		springLayout.putConstraint(SpringLayout.NORTH, botaoAtualizar, 424, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, examesScroll, -6, SpringLayout.NORTH, botaoAtualizar);
 		springLayout.putConstraint(SpringLayout.WEST, botaoAtualizar, 617, SpringLayout.WEST, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, botaoAtualizar, 0, SpringLayout.EAST, examesScroll);
 		botaoAtualizar.setFont(new Font("Arial", Font.BOLD, 12));
@@ -259,42 +259,26 @@ public class MainWindow {
 		
 		//Titulo e botoes referentes as opcoes de relatorios
 		JLabel tituloRelatorio = new JLabel("Relat\u00F3rios:");
+		springLayout.putConstraint(SpringLayout.SOUTH, botaoExcluir, -64, SpringLayout.NORTH, tituloRelatorio);
+		springLayout.putConstraint(SpringLayout.NORTH, tituloRelatorio, 276, SpringLayout.NORTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.SOUTH, tituloRelatorio, -172, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, tituloRelatorio, 0, SpringLayout.EAST, tituloOpcoes);
 		springLayout.putConstraint(SpringLayout.WEST, tituloRelatorio, 15, SpringLayout.EAST, examesScroll);
-		springLayout.putConstraint(SpringLayout.EAST, tituloRelatorio, -22, SpringLayout.EAST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, botaoExcluir, -50, SpringLayout.NORTH, tituloRelatorio);
-		springLayout.putConstraint(SpringLayout.NORTH, tituloRelatorio, 231, SpringLayout.NORTH, frame.getContentPane());
 		tituloRelatorio.setFont(new Font("Arial", Font.BOLD, 13));
 		tituloRelatorio.setHorizontalAlignment(SwingConstants.CENTER);
 		frame.getContentPane().add(tituloRelatorio);
 		
-		JButton botaoRelAtletas = new JButton("Atletas");
-		springLayout.putConstraint(SpringLayout.WEST, botaoRelAtletas, 15, SpringLayout.EAST, examesScroll);
-		springLayout.putConstraint(SpringLayout.EAST, botaoRelAtletas, -10, SpringLayout.EAST, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, tituloRelatorio, -6, SpringLayout.NORTH, botaoRelAtletas);
-		springLayout.putConstraint(SpringLayout.NORTH, botaoRelAtletas, 260, SpringLayout.NORTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, botaoRelAtletas, 283, SpringLayout.NORTH, frame.getContentPane());
-		botaoRelAtletas.setFont(new Font("Arial", Font.BOLD, 12));
-		botaoRelAtletas.addActionListener(new ActionListener() {
+		JButton botaoRelatorios = new JButton("Gerar Novo Relat\u00F3rio");
+		springLayout.putConstraint(SpringLayout.NORTH, botaoRelatorios, 6, SpringLayout.SOUTH, tituloRelatorio);
+		springLayout.putConstraint(SpringLayout.WEST, botaoRelatorios, 0, SpringLayout.WEST, tituloOpcoes);
+		springLayout.putConstraint(SpringLayout.SOUTH, botaoRelatorios, -143, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, botaoRelatorios, 0, SpringLayout.EAST, tituloOpcoes);
+		botaoRelatorios.setFont(new Font("Arial", Font.BOLD, 12));
+		botaoRelatorios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		frame.getContentPane().add(botaoRelAtletas);
-		
-		JButton botaoRelMedicos = new JButton("M\u00E9dicos");
-		springLayout.putConstraint(SpringLayout.WEST, botaoRelMedicos, 15, SpringLayout.EAST, examesScroll);
-		springLayout.putConstraint(SpringLayout.EAST, botaoRelMedicos, -10, SpringLayout.EAST, frame.getContentPane());
-		botaoRelMedicos.setFont(new Font("Arial", Font.BOLD, 12));
-		springLayout.putConstraint(SpringLayout.NORTH, botaoRelMedicos, 289, SpringLayout.NORTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, botaoRelMedicos, 312, SpringLayout.NORTH, frame.getContentPane());
-		frame.getContentPane().add(botaoRelMedicos);
-		
-		JButton botaoRelTreinadores = new JButton("Preparadores");
-		springLayout.putConstraint(SpringLayout.WEST, botaoRelTreinadores, 15, SpringLayout.EAST, examesScroll);
-		springLayout.putConstraint(SpringLayout.EAST, botaoRelTreinadores, -10, SpringLayout.EAST, frame.getContentPane());
-		botaoRelTreinadores.setFont(new Font("Arial", Font.BOLD, 12));
-		springLayout.putConstraint(SpringLayout.NORTH, botaoRelTreinadores, 318, SpringLayout.NORTH, frame.getContentPane());
-		springLayout.putConstraint(SpringLayout.SOUTH, botaoRelTreinadores, 341, SpringLayout.NORTH, frame.getContentPane());
-		frame.getContentPane().add(botaoRelTreinadores);
+		frame.getContentPane().add(botaoRelatorios);
 		
 		//Seta tamanho minimo para colunas da tabela
 		tabelaExames.getColumnModel().getColumn(0).setMinWidth(5);
