@@ -87,7 +87,7 @@ public class MainWindow {
         DefaultTableModel model = (DefaultTableModel)tabelaExames.getModel();
 		try{
 			  stmt = this.connection.createStatement();
-	          rs = stmt.executeQuery("SELECT * FROM EXAMEDOPING");
+	          rs = stmt.executeQuery("SELECT * FROM EXAMEDOPING ORDER BY DATAEXAME DESC");
 			  while (rs.next()) {       
 	            model.addRow(new Object[]{rs.getString("CODIGO"), rs.getString("DATAEXAME").substring(0, 10), rs.getString("RESULTADO"), rs.getString("REPROVADO"),
 	            rs.getString("PASSAPORTEATLETA"), rs.getString("CODIGOMEDICO"),rs.getString("CODIGOMODALIDADE")});
