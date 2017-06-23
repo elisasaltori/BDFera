@@ -207,12 +207,12 @@ public class MainWindow {
 		botaoAlterar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				/*int row=tabelaExames.getSelectedRow();
+				int row=tabelaExames.getSelectedRow();
 				if(row!=-1){
 					String str=(String)tabelaExames.getModel().getValueAt(row, 0); //Pega id do registro
-					int id=Integer.parseInt(str);
-					new AlterarDados(connection, id);
-				}*/
+					//int id=Integer.parseInt(str);
+					new AlterarDados(connection, str);
+				}
 			}
 		});
 		springLayout.putConstraint(SpringLayout.WEST, botaoAlterar, 15, SpringLayout.EAST, examesScroll);

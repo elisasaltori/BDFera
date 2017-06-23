@@ -57,7 +57,7 @@ public class AlterarDados {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
-	private void janelaAlterarDados(){
+	private void janelaAlterarDados(String key){
 		JTextArea resultadoTextArea;
 		JFormattedTextField dataTextField;
 		frmAdicionar = new JFrame();
@@ -148,7 +148,7 @@ public class AlterarDados {
 		        //diagnosticoTextField.setText(rs.getString("novocodigo").toString());
 	        	
 	        }
-	        passaporteComboBox.setMaximumRowCount(index+1);
+	       // passaporteComboBox.setMaximumRowCount(index+1);
 	    }catch(Exception e){
 	     	e.printStackTrace();
 	    }
@@ -158,18 +158,19 @@ public class AlterarDados {
 		
 		diagnosticoTextField = new JTextField();
 		
-	
-		try{
-			Statement stmt;
-	        ResultSet rs;
-			stmt = c.createStatement();
-	        rs = stmt.executeQuery("select nvl(max(codigo)+1,0) as novocodigo from examedoping");
-	        rs.next();
-	        System.out.println(rs.getString("novocodigo"));
-	        diagnosticoTextField.setText(rs.getString("novocodigo").toString());
-	    }catch(Exception e){
-	     	e.printStackTrace();
-	    }
+		if(key == null){
+			try{
+				Statement stmt;
+		        ResultSet rs;
+				stmt = c.createStatement();
+		        rs = stmt.executeQuery("select nvl(max(codigo)+1,0) as novocodigo from examedoping");
+		        rs.next();
+		        System.out.println(rs.getString("novocodigo"));
+		        diagnosticoTextField.setText(rs.getString("novocodigo").toString());
+		    }catch(Exception e){
+		     	e.printStackTrace();
+		    }
+		}
 		diagnosticoTextField.setEnabled(false);
 		diagnosticoTextField.setEditable(false);
 		diagnosticoTextField.setBounds(23, 62, 86, 20);
@@ -213,7 +214,37 @@ public class AlterarDados {
 	    }
 		modalidadeComboBox.setBounds(495, 62, 86, 20);
 		frmAdicionar.getContentPane().add(modalidadeComboBox);
-		
+		if(key != null){
+			diagnosticoTextField.setText(key);
+			try{
+				int index = 0;
+				Statement stmt;
+		        ResultSet rs;
+				stmt = c.createStatement();
+		        rs = stmt.executeQuery("select * from examedoping where codigo = "+key);
+		        /*while(rs.next()){
+		        	passaporteComboBox.insertItemAt(rs.getString("passaporte"), index++);
+			        //System.out.println(rs.getString("novocodigo"));
+			        //diagnosticoTextField.setText(rs.getString("novocodigo").toString());
+		        	
+		        }*/
+		        rs.next();
+		        while(!rs.getString("passaporteatleta").equals(passaporteComboBox.getItemAt(index))) index++;
+		        passaporteComboBox.setSelectedIndex(index);
+		        index = 0;
+		        while(!rs.getString("codigomedico").equals(medicoComboBox.getItemAt(index))) index++;
+		        medicoComboBox.setSelectedIndex(index);
+		        index = 0;
+		        while(!rs.getString("codigomodalidade").equals(modalidadeComboBox.getItemAt(index))) index++;
+		        modalidadeComboBox.setSelectedIndex(index);
+		        index = 0;
+		        if(rs.getString("reprovado").equals("1")) chckbxReprovado.setSelected(true); 
+		        resultadoTextArea.setText(rs.getString("resultado"));
+		    }catch(Exception e){
+		     	e.printStackTrace();
+		    }
+			
+		}
 		//botar aqui a sql querry
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -221,9 +252,9 @@ public class AlterarDados {
 				//data = dataTextField.getText();
 				resultado = resultadoTextArea.getText();
 				reprovado = chckbxReprovado.isSelected();
-//				passaporte = passaporteTextField.getText();
-//				medico = medicoTextField.getText();
-//				modalidade = modalidadeTextField.getText();
+				passaporte = (String) passaporteComboBox.getSelectedItem();
+				medico = (String) medicoComboBox.getSelectedItem();
+				modalidade = (String) modalidadeComboBox.getSelectedItem();
 				try {
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 					Date d = df.parse(dataTextField.getText());
@@ -238,57 +269,54 @@ public class AlterarDados {
 				System.out.println(medico);
 				System.out.println(modalidade);
 				frmAdicionar.setVisible(false);
-				insertQuery();
+				insertQuery(key);
 				return;
 			}
 		});
 		frmAdicionar.setVisible(true);
-		//ISSO FAZ SUA JANELA NAO FAZER NADA D:
-		/*while(salvo != true){
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}*/
-		
-	}
-	/*public static boolean AlterarDados(int key){
-		return true;
-	}*/
-	public AlterarDados(Connection connection){
-		c = connection;
-		janelaAlterarDados();
 		
 		
-	}
-	private void insertQuery(){
-		try {
-			int ireprovado;
-			if(reprovado == true) ireprovado = 1;
-			else ireprovado = 0;
-			PreparedStatement pstmt = c.prepareStatement("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
-			//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	public AlterarDados(){
-		
-		//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");    
-		janelaAlterarDados();
-		//	System.out.println("Saiu");
 	}
 	
-	public static void main(String args[]) throws InterruptedException{
-
-		AlterarDados j = new AlterarDados();
-		//j.frmAdicionar.setVisible(true);
-		/*while(true){
-			Thread.sleep(1000);
-		}*/
+	public AlterarDados(Connection connection){
+		c = connection;
+		janelaAlterarDados(null);
+		
+		
 	}
+	public AlterarDados(Connection connection, String key){
+		c = connection;
+		janelaAlterarDados(key);
+	}
+	private void insertQuery(String key){
+		if(key == null){
+			try {
+				int ireprovado;
+				if(reprovado == true) ireprovado = 1;
+				else ireprovado = 0;
+				PreparedStatement pstmt = c.prepareStatement("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
+				//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		else{
+			try {
+				int ireprovado;
+				if(reprovado == true) ireprovado = 1;
+				else ireprovado = 0;
+				PreparedStatement pstmt = c.prepareStatement("update examedoping set dataexame = to_date('" + data + " ', 'DD/MM/RRRR'), resultado = '" + resultado + " ', reprovado = " + ireprovado + ", passaporteatleta = '"+ passaporte + "', codigomedico = " + medico + ", codigomodalidade = "+ modalidade + " where codigo = "+ key);
+				//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
 }
