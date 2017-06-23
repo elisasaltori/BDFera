@@ -261,6 +261,7 @@ public class AlterarDados {
 					data = df.format(d);
 				} catch (ParseException e1) {
 					JOptionPane.showMessageDialog(null, "Digite uma data no formato dd/MM/yyyy");
+					data = null;
 				}
 				System.out.println(data);
 				System.out.println(resultado);
@@ -269,7 +270,12 @@ public class AlterarDados {
 				System.out.println(medico);
 				System.out.println(modalidade);
 				frmAdicionar.setVisible(false);
-				insertQuery(key);
+				try {
+					insertQuery(key);
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+					frmAdicionar.setVisible(true);
+				}
 				return;
 			}
 		});
@@ -288,9 +294,9 @@ public class AlterarDados {
 		c = connection;
 		janelaAlterarDados(key);
 	}
-	private void insertQuery(String key){
+	private void insertQuery(String key) throws SQLException{
 		if(key == null){
-			try {
+			//try {
 				int ireprovado;
 				if(reprovado == true) ireprovado = 1;
 				else ireprovado = 0;
@@ -298,22 +304,23 @@ public class AlterarDados {
 				//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
 				pstmt.executeUpdate();
 				pstmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			//} catch (SQLException e) {
+				//JOptionPane.showMessageDialog(null, e.getMessage());
+			//}
 		}
 		else{
-			try {
+			//try {
 				int ireprovado;
 				if(reprovado == true) ireprovado = 1;
 				else ireprovado = 0;
 				PreparedStatement pstmt = c.prepareStatement("update examedoping set dataexame = to_date('" + data + " ', 'DD/MM/RRRR'), resultado = '" + resultado + " ', reprovado = " + ireprovado + ", passaporteatleta = '"+ passaporte + "', codigomedico = " + medico + ", codigomodalidade = "+ modalidade + " where codigo = "+ key);
-				//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
+				System.out.println("update examedoping set dataexame = to_date('" + data + " ', 'DD/MM/RRRR'), resultado = '" + resultado + " ', reprovado = " + ireprovado + ", passaporteatleta = '"+ passaporte + "', codigomedico = " + medico + ", codigomodalidade = "+ modalidade + " where codigo = "+ key);
 				pstmt.executeUpdate();
 				pstmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			//} catch (SQLException e) {
+				//e.printStackTrace();
+				//JOptionPane.showMessageDialog(null, e.getMessage());
+			//}
 		}
 	}
 	
