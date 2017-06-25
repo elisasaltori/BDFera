@@ -276,6 +276,7 @@ public class MainWindow {
 		botaoRelatorios.setFont(new Font("Arial", Font.BOLD, 12));
 		botaoRelatorios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				ReportsWindow.runReportsWindow();
 			}
 		});
 		frame.getContentPane().add(botaoRelatorios);
