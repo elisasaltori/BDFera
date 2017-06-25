@@ -195,7 +195,7 @@ public class ReportsWindow {
 	    	document.add(pdfTable);
 	    	document.add(new Paragraph(Chunk.NEWLINE));
 	    	document.add(new Paragraph("Gerado em " + dateFormat.format(Calendar.getInstance().getTime()).toString()));		  
-	    	document.close();	
+	    	document.close();
 	    } catch (Exception e) {
 	    	System.err.println(e.getMessage());
 	    	return false;

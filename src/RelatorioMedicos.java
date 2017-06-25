@@ -28,7 +28,7 @@ public class RelatorioMedicos extends ReportPanel{
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
 		fillHeader();
-		initializeTable(new String[] {"Nome", "Doc Identidade", "CRM", "Endereço"});
+		initializeTable(new String[] {"Código", "Nome", "Doc Identidade", "CRM", "Atendimentos"});
 		fillTable();
 		
         numMinAtendimentos.addActionListener (new ActionListener () {
@@ -66,7 +66,7 @@ public class RelatorioMedicos extends ReportPanel{
         try {
         	stmt = connection.createStatement();
         	rs = stmt.executeQuery("SELECT NOME FROM NACAO");
-        	
+        	nacaoBox.addItem("Todos");
         	while (rs.next())
         		nacaoBox.addItem((String)rs.getString("NOME"));
 		}catch(Exception e){
@@ -88,23 +88,29 @@ public class RelatorioMedicos extends ReportPanel{
 		
         try{
 			stmt = connection.createStatement();
+			
+			String nacaoString;
+			if (nacaoBox.getSelectedIndex()==0){
+				nacaoString = "1=1";
+			} else {
+				nacaoString = "a.nacaoorigem= '" + nacaoBox.getSelectedItem() + "' ";
+			}
 
-			rs = stmt.executeQuery("SELECT NOME, DOCIDENTIDADE, CRM, ENDERECO, COUNT(*) AS NUMATENDIMENTOS FROM MEDICO M "+
-			    "JOIN (SELECT DISTINCT PASSAPORTEATLETA, CODIGOMEDICO FROM ATENDIMENTOLESAO AL "+
-			        "JOIN (SELECT PASSAPORTEATLETA AS PASSAPORTE FROM ATLETAPARTICIPANTE AP "+
-			            "JOIN (SELECT NOME AS NOME_NACAO FROM NACAO N WHERE N.NOME = '" + nacaoBox.getSelectedItem() + "') "+
-			            "ON AP.NOMENACAO = NOME_NACAO "+
-			        ")"+
-			        "ON PASSAPORTEATLETA = PASSAPORTE "+
-			        "GROUP BY PASSAPORTEATLETA, CODIGOMEDICO "+
-			        "HAVING COUNT(*) > "+ numMinAtendimentos.getValue().toString() +") AL "+
-			    "ON M.CODIGO = AL.CODIGOMEDICO "+
-			    "GROUP BY NOME, DOCIDENTIDADE, CRM, ENDERECO");
+			rs = stmt.executeQuery("select m.codigo, m.nome, m.docidentidade, m.crm, count(distinct a.passaporte) as Nro_Atletas "+
+			    "from medico m "+
+			        "join consulta c on c.CODIGOMEDICO = m.codigo "+
+			        "join atendimentolesao al on al.CODIGOMEDICO=m.codigo "+
+			        "join examedoping ed on ed.CODIGOMEDICO=m.codigo "+
+			        "join atleta a on " + nacaoString + " and "+ 
+			            "(al.passaporteatleta=a.passaporte or ed.passaporteatleta=a.passaporte or c.passaporteatleta=a.passaporte) "+
+			    "group by m.codigo, m.nome, m.docidentidade, m.crm having count(distinct a.passaporte)>=" + numMinAtendimentos.getValue());
+
+
+			
 			
 			model.setRowCount(0);
 			while (rs.next()) {
-				for (int i=0; i<10; i++)
-				model.addRow(new Object[]{rs.getString("NOME"), rs.getString("DOCIDENTIDADE"), rs.getString("CRM"), rs.getString("ENDERECO"), rs.getString("NUMATENDIMENTOS")});
+				model.addRow(new Object[]{rs.getString("CODIGO"), rs.getString("NOME"), rs.getString("DOCIDENTIDADE"), rs.getString("CRM"), rs.getString("NRO_ATLETAS")});
 			}
 			
 		}catch(Exception e){

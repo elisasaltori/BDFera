@@ -83,31 +83,35 @@ public class RelatorioAtletas extends ReportPanel {
         
         try {
         	stmt = connection.createStatement();
-        	rs = stmt.executeQuery("SELECT NOME FROM MODALIDADEESPORTIVA");
+        	rs = stmt.executeQuery("SELECT CODIGO, NOME FROM MODALIDADEESPORTIVA ORDER BY CODIGO, NOME");
         	
         	while (rs.next())
-        		dropDownMenus.elementAt(0).addItem((String)rs.getString("NOME"));
+        		dropDownMenus.elementAt(0).addItem(rs.getString("CODIGO") + " - " + rs.getString("NOME"));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
         try {
         	stmt = connection.createStatement();
-        	rs = stmt.executeQuery("SELECT NOME FROM MEDICO");
+        	rs = stmt.executeQuery("SELECT CODIGO, NOME FROM MEDICO ORDER BY CODIGO, NOME");
         	
         	while (rs.next())
-        		dropDownMenus.elementAt(1).addItem(rs.getString("NOME"));
+        		dropDownMenus.elementAt(1).addItem(rs.getString("CODIGO") + " - " + rs.getString("NOME"));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
         try {
         	stmt = connection.createStatement();
-        	rs = stmt.executeQuery("SELECT NOME FROM PREPARADOR");
+        	rs = stmt.executeQuery("SELECT CODIGO, NOME FROM PREPARADOR ORDER BY CODIGO, NOME");
         	
         	while (rs.next())
-        		dropDownMenus.elementAt(2).addItem(rs.getString("NOME"));
+        		dropDownMenus.elementAt(2).addItem(rs.getString("CODIGO") + " - " + rs.getString("NOME"));
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+
+	private int getIndexValue(String str){
+		return Integer.parseInt(str.substring(0, str.indexOf('-')-1));
 	}
 	
 	@Override
@@ -120,44 +124,37 @@ public class RelatorioAtletas extends ReportPanel {
 
 			String modalidadeString;
 			if (dropDownMenus.elementAt(0).getSelectedIndex()==0){
-				modalidadeString = "LIKE '%'";
+				modalidadeString = "1=1";
 			} else {
-				modalidadeString = "= '" + dropDownMenus.elementAt(0).getSelectedItem()+"'";
+				modalidadeString = "ap.codigomodalidade="+getIndexValue((String) dropDownMenus.elementAt(0).getSelectedItem());
 			}
 			String medicoString;
 			if (dropDownMenus.elementAt(1).getSelectedIndex()==0){
-				medicoString = "LIKE '%'";
+				medicoString = "1=1";
 			} else {
-				medicoString = "= '" + dropDownMenus.elementAt(1).getSelectedItem()+"'";
+				medicoString = "al.codigomedico="+ getIndexValue((String) dropDownMenus.elementAt(1).getSelectedItem()) + " or c.codigomedico="+getIndexValue((String) dropDownMenus.elementAt(1).getSelectedItem())+" or ed.codigomedico=" + getIndexValue((String) dropDownMenus.elementAt(1).getSelectedItem()+" ");
 			}
 			String treinadorString;
 			if (dropDownMenus.elementAt(2).getSelectedIndex()==0){
-				treinadorString = "LIKE '%'";
+				treinadorString = "1=1";
 			} else {
-				treinadorString = "= '" + dropDownMenus.elementAt(2).getSelectedItem() + "'";
+				treinadorString = "eo.preparador=" + getIndexValue((String) dropDownMenus.elementAt(2).getSelectedItem());
 			}
 
-			rs = stmt.executeQuery(
-			"SELECT NOME, PASSAPORTE, NACAOORIGEM, DATANASCIMENTO FROM ATLETA A "+
-			    "JOIN( "+
-			        "(SELECT PASSAPORTEATLETA FROM ATLETAPARTICIPANTE AP "+
-			            "JOIN (SELECT NACAO, MODALIDADE FROM EQUIPEOLIMPICA EO "+
-			                "JOIN (SELECT CODIGO, NOME FROM MODALIDADEESPORTIVA M WHERE M.NOME " + modalidadeString +") M "+
-			                "ON EO.MODALIDADE = M.CODIGO "+
-			                "JOIN (SELECT CODIGO, NOME FROM PREPARADOR P WHERE P.NOME "+ treinadorString +") P "+
-			                "ON P.CODIGO = EO.PREPARADOR "+
-			            ") EO ON EO.NACAO = AP.NOMENACAO AND EO.MODALIDADE = AP.CODIGOMODALIDADE "+
-			        ") AP "+
-			        "JOIN(SELECT CODIGO, PASSAPORTEATLETA, CODIGOMEDICO FROM ATENDIMENTOLESAO AL "+
-			            "JOIN (SELECT MED.CODIGO AS MED_COD, MED.NOME FROM MEDICO MED WHERE MED.NOME " + medicoString +") MED "+
-			            "ON AL.CODIGOMEDICO = MED_COD "+
-			        ") AL "+
-			        "ON AL.PASSAPORTEATLETA = AP.PASSAPORTEATLETA "+
-			    ") "+
-			    "ON AL.PASSAPORTEATLETA = A.PASSAPORTE ");
+			rs = stmt.executeQuery("select a.nome, a.passaporte, a.nacaoorigem, a.datanascimento "+
+		    "from atleta a "+
+		        "left join consulta c on c.passaporteatleta=a.passaporte "+
+		        "left join atendimentolesao al on al.passaporteatleta=a.passaporte "+
+		        "left join examedoping ed on ed.passaporteatleta=a.passaporte "+
+		        "join atletaparticipante ap on ap.passaporteatleta=a.passaporte "+
+		        "join equipeolimpica eo on eo.nacao=a.nacaoorigem and eo.modalidade = ap.codigomodalidade "+
+		    "where (" + medicoString + ") and " + treinadorString + " and " + modalidadeString + " " +
+			"group by a.passaporte, a.nome, a.nacaoorigem, a.datanascimento ");
+			
+			
+			
 			model.setRowCount(0);
 			while (rs.next()) {
-				for (int i=0; i<10; i++)
 				model.addRow(new Object[]{rs.getString("NOME"), rs.getString("PASSAPORTE"), rs.getString("NACAOORIGEM"), rs.getString("DATANASCIMENTO").substring(0,11)});
 			}
 			
