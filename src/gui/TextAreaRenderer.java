@@ -9,12 +9,13 @@ import javax.swing.table.TableCellRenderer;
 
 /**
  * Classe auxiliar para a criacao de uma coluna da tabela. Estabelece uma celula de TextArea com scrollbar.
- * 
- *
+ * Codigo original por: Joris Van den Bogaert
+ * Modificado por Elisa Saltori Trujillo
  */
 public class TextAreaRenderer extends JScrollPane implements TableCellRenderer
 {
-	   JTextArea textarea;
+	private static final long serialVersionUID = 1L;
+	JTextArea textarea;
 	  
 	   public TextAreaRenderer() {
 	      textarea = new JTextArea();

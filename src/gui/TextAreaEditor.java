@@ -10,11 +10,13 @@ import javax.swing.JTextArea;
 
 /**
  * Classe auxiliar para a criacao de uma coluna da tabela. Estabelece um editor para umaa celula de TextArea com scrollbar.
- * 
- *
+  * Codigo original por: Joris Van den Bogaert
+ *  Modificado por Elisa Saltori Trujillo
  */
 public class TextAreaEditor extends DefaultCellEditor {
-	   protected JScrollPane scrollpane;
+
+	private static final long serialVersionUID = 1L;
+	protected JScrollPane scrollpane;
 	   protected JTextArea textarea;
   
 	   public TextAreaEditor() {
