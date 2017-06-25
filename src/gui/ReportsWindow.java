@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileOutputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -40,26 +39,10 @@ public class ReportsWindow {
 	
 	ButtonGroup radio;
 	Button generateButton;
-	
 	Vector<ReportPanel> relatoriosPanels;	
 	Vector<String> textosRelatorios;
 	int index;
-	
-	public Connection Connect(){
-		 Connection connection;
-		 try{
-		 Class.forName("oracle.jdbc.driver.OracleDriver");
-         connection = DriverManager.getConnection(
-                 "jdbc:oracle:thin:@grad.icmc.usp.br:15215:orcl",
-                 "8551100",
-                 "grupofera");
-         	return connection;
-		 }catch(Exception e){
-			 e.printStackTrace();
-			 return null;
-		 }
-	}
-	
+
 	private ActionListener radioListener = new ActionListener (){
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -110,10 +93,10 @@ public class ReportsWindow {
 		reportsPanel.add(generateButton);
 	}
 	
-	public ReportsWindow(){
+	public ReportsWindow(Connection connection){
 		frame = new JFrame("Relatórios");
 		frame.setBounds(100,100,1000,500);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setResizable(false);
 		
 		JPanel superPanel = new JPanel();
@@ -127,8 +110,6 @@ public class ReportsWindow {
 		JPanel aux = new JPanel(); aux.add(title); superPanel.add(aux);
 		
 		aux = new JPanel(); aux.add(instruction); superPanel.add(aux);
-		
-		Connection connection = Connect();
 		
 		relatoriosPanels = new Vector<ReportPanel>();
 		textosRelatorios = new Vector<String>();
@@ -218,8 +199,8 @@ public class ReportsWindow {
 	    return true;
 	}
 	
-	public static void runReportsWindow (){
-		ReportsWindow rw = new ReportsWindow();
+	public static void runReportsWindow (Connection connection){
+		ReportsWindow rw = new ReportsWindow(connection);
 		rw.frame.setVisible(true);
 	}
 }

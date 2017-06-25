@@ -13,6 +13,7 @@ import javax.swing.SpringLayout;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
@@ -216,6 +217,8 @@ public class MainWindow {
 					String str=(String)tabelaExames.getModel().getValueAt(row, 0); //Pega id do registro
 					//int id=Integer.parseInt(str);
 					new AlterarDados(connection, str);
+				}else{
+					JOptionPane.showMessageDialog(null, "Erro: nenhum item selecionado!");
 				}
 			}
 		});
@@ -236,6 +239,8 @@ public class MainWindow {
 					int id=Integer.parseInt(str);
 					deleteExam(id); //Remove registo do BD
 					updateTable();
+				}else{
+					JOptionPane.showMessageDialog(null, "Erro: nenhum item selecionado!");
 				}
 			}
 		});
@@ -269,16 +274,18 @@ public class MainWindow {
 		frame.getContentPane().add(tituloRelatorio);
 		
 		JButton botaoRelatorios = new JButton("Gerar Novo Relat\u00F3rio");
+		botaoRelatorios.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				ReportsWindow.runReportsWindow(connection);
+			}
+		});
 		springLayout.putConstraint(SpringLayout.NORTH, botaoRelatorios, 6, SpringLayout.SOUTH, tituloRelatorio);
 		springLayout.putConstraint(SpringLayout.WEST, botaoRelatorios, 0, SpringLayout.WEST, tituloOpcoes);
 		springLayout.putConstraint(SpringLayout.SOUTH, botaoRelatorios, -143, SpringLayout.SOUTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.EAST, botaoRelatorios, 0, SpringLayout.EAST, tituloOpcoes);
 		botaoRelatorios.setFont(new Font("Arial", Font.BOLD, 12));
-		botaoRelatorios.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				ReportsWindow.runReportsWindow();
-			}
-		});
+	
 		frame.getContentPane().add(botaoRelatorios);
 		
 		//Seta tamanho minimo para colunas da tabela

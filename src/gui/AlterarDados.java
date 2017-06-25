@@ -62,6 +62,8 @@ public class AlterarDados {
 		JFormattedTextField dataTextField;
 		frmAdicionar = new JFrame();
 		
+		frmAdicionar.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
 		JButton btnSalvar = new JButton("Salvar");
 		JLabel lblNewLabel = new JLabel("C\u00F3digo do diagn\u00F3stico");
 		JLabel lblData = new JLabel("Data");
@@ -77,7 +79,6 @@ public class AlterarDados {
 		});
 		frmAdicionar.getContentPane().setLayout(null);
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		frmAdicionar.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmAdicionar.setBounds((int)(dimension.getWidth()-366)/2, (int)(dimension.getHeight()-195)/2, 653, 301);
 		
 		

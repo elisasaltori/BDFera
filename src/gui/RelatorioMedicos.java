@@ -99,12 +99,13 @@ public class RelatorioMedicos extends ReportPanel{
 
 			rs = stmt.executeQuery("select m.codigo, m.nome, m.docidentidade, m.crm, count(distinct a.passaporte) as Nro_Atletas "+
 			    "from medico m "+
-			        "join consulta c on c.CODIGOMEDICO = m.codigo "+
-			        "join atendimentolesao al on al.CODIGOMEDICO=m.codigo "+
-			        "join examedoping ed on ed.CODIGOMEDICO=m.codigo "+
-			        "join atleta a on " + nacaoString + " and "+ 
+			        "left join consulta c on c.CODIGOMEDICO = m.codigo "+
+			        "left join atendimentolesao al on al.CODIGOMEDICO=m.codigo "+
+			        "left join examedoping ed on ed.CODIGOMEDICO=m.codigo "+
+			        "left join atleta a on " + nacaoString + " and "+ 
 			            "(al.passaporteatleta=a.passaporte or ed.passaporteatleta=a.passaporte or c.passaporteatleta=a.passaporte) "+
-			    "group by m.codigo, m.nome, m.docidentidade, m.crm having count(distinct a.passaporte)>=" + numMinAtendimentos.getValue());
+			    "group by m.codigo, m.nome, m.docidentidade, m.crm having count(distinct a.passaporte)>=" + numMinAtendimentos.getValue()
+			    +"order by Nro_Atletas desc");
 
 
 			
