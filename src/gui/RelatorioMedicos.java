@@ -29,7 +29,7 @@ public class RelatorioMedicos extends ReportPanel{
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
 		fillHeader();
-		initializeTable(new String[] {"Código", "Nome", "Doc Identidade", "CRM", "Atendimentos"});
+		initializeTable(new String[] {"Código", "Nome", "Doc Identidade", "CRM", "N. Total de Atletas Atendidos"});
 		fillTable();
 		
         numMinAtendimentos.addActionListener (new ActionListener () {
@@ -97,11 +97,12 @@ public class RelatorioMedicos extends ReportPanel{
 				nacaoString = "a.nacaoorigem= '" + nacaoBox.getSelectedItem() + "' ";
 			}
 
-			rs = stmt.executeQuery("select m.codigo, m.nome, m.docidentidade, m.crm, count(distinct a.passaporte) as Nro_Atletas "+
+			rs = stmt.executeQuery("select m.codigo, m.nome, m.docidentidade, m.crm, count(distinct a2.passaporte) as Nro_Atletas "+
 			    "from medico m "+
 			        "left join consulta c on c.CODIGOMEDICO = m.codigo "+
 			        "left join atendimentolesao al on al.CODIGOMEDICO=m.codigo "+
 			        "left join examedoping ed on ed.CODIGOMEDICO=m.codigo "+
+			        "left join atleta a2 on (al.passaporteatleta=a2.passaporte or ed.passaporteatleta=a2.passaporte or c.passaporteatleta=a2.passaporte)"+
 			        "left join atleta a on " + nacaoString + " and "+ 
 			            "(al.passaporteatleta=a.passaporte or ed.passaporteatleta=a.passaporte or c.passaporteatleta=a.passaporte) "+
 			    "group by m.codigo, m.nome, m.docidentidade, m.crm having count(distinct a.passaporte)>=" + numMinAtendimentos.getValue()
