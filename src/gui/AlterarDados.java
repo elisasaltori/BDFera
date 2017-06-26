@@ -24,9 +24,6 @@ import java.sql.Statement;
 import javax.swing.JComboBox;
 
 
-//https://docs.oracle.com/javase/tutorial/uiswing/components/formattedtextfield.html
-//https://coderanch.com/t/341412/java/lock-disable-JTextField
-//insert into examedopping (...) select nvl(max(codigo)+1), ... from examedopping
 public class AlterarDados {
 	
 	
@@ -34,10 +31,8 @@ public class AlterarDados {
 	private String resultado, data, passaporte, medico, modalidade;
 	private boolean reprovado;
 	private JFrame frmAdicionar;
-	//private boolean reprovado;
 	private JTextField diagnosticoTextField;
 	private Connection c;
-	//private JTextField textField;
 	
 	/**
 	 * @wbp.parser.entryPoint
@@ -103,10 +98,6 @@ public class AlterarDados {
 		btnSalvar.setBounds(164, 227, 89, 23);
 		frmAdicionar.getContentPane().add(btnSalvar);
 		
-		/*diagnosticoTextField = new JTextField();
-		diagnosticoTextField.setBounds(23, 62, 86, 20);
-		frmAdicionar.getContentPane().add(diagnosticoTextField);
-		diagnosticoTextField.setColumns(10);*/
 		
 		JLabel lblPassaporte = new JLabel("Passaporte");
 		lblPassaporte.setBounds(256, 37, 62, 14);
@@ -130,11 +121,8 @@ public class AlterarDados {
 	        rs = stmt.executeQuery("select passaporte from atleta");
 	        while(rs.next()){
 	        	passaporteComboBox.insertItemAt(rs.getString("passaporte"), index++);
-		        //System.out.println(rs.getString("novocodigo"));
-		        //diagnosticoTextField.setText(rs.getString("novocodigo").toString());
 	        	
 	        }
-	       // passaporteComboBox.setMaximumRowCount(index+1);
 	    }catch(Exception e){
 	     	e.printStackTrace();
 	    }
@@ -172,8 +160,6 @@ public class AlterarDados {
 	        rs = stmt.executeQuery("select codigo from medico");
 	        while(rs.next()){
 	        	medicoComboBox.insertItemAt(rs.getString("codigo"), index++);
-		        //System.out.println(rs.getString("novocodigo"));
-		        //diagnosticoTextField.setText(rs.getString("novocodigo").toString());
 	        	
 	        }
 	    }catch(Exception e){
@@ -191,9 +177,6 @@ public class AlterarDados {
 	        rs = stmt.executeQuery("select codigo from modalidadeesportiva");
 	        while(rs.next()){
 	        	modalidadeComboBox.insertItemAt(rs.getString("codigo"), index++);
-		        //System.out.println(rs.getString("novocodigo"));
-		        //diagnosticoTextField.setText(rs.getString("novocodigo").toString());
-	        	
 	        }
 	    }catch(Exception e){
 	     	e.printStackTrace();
@@ -208,12 +191,6 @@ public class AlterarDados {
 		        ResultSet rs;
 				stmt = c.createStatement();
 		        rs = stmt.executeQuery("select * from examedoping where codigo = "+key);
-		        /*while(rs.next()){
-		        	passaporteComboBox.insertItemAt(rs.getString("passaporte"), index++);
-			        //System.out.println(rs.getString("novocodigo"));
-			        //diagnosticoTextField.setText(rs.getString("novocodigo").toString());
-		        	
-		        }*/
 		        rs.next();
 		        while(!rs.getString("passaporteatleta").equals(passaporteComboBox.getItemAt(index))) index++;
 		        passaporteComboBox.setSelectedIndex(index);
@@ -231,11 +208,9 @@ public class AlterarDados {
 		    }
 			
 		}
-		//botar aqui a sql querry
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("Estou pressionado");
-				//data = dataTextField.getText();
 				resultado = resultadoTextArea.getText();
 				reprovado = chckbxReprovado.isSelected();
 				passaporte = (String) passaporteComboBox.getSelectedItem();
@@ -273,8 +248,8 @@ public class AlterarDados {
 	public AlterarDados(Connection connection){
 		c = connection;
 		janelaAlterarDados(null);
-		
-		
+
+
 	}
 	public AlterarDados(Connection connection, String key){
 		c = connection;
@@ -282,31 +257,21 @@ public class AlterarDados {
 	}
 	private void insertQuery(String key) throws SQLException{
 		if(key == null){
-			//try {
-				int ireprovado;
-				if(reprovado == true) ireprovado = 1;
-				else ireprovado = 0;
-				Statement stmt = c.createStatement();
-				stmt.execute("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
-				//System.out.println("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");	
-				stmt.close();
-			//} catch (SQLException e) {
-				//JOptionPane.showMessageDialog(null, e.getMessage());
-			//}
+			int ireprovado;
+			if(reprovado == true) ireprovado = 1;
+			else ireprovado = 0;
+			Statement stmt = c.createStatement();
+			stmt.execute("INSERT INTO EXAMEDOPING (codigo, dataexame, resultado, reprovado, passaporteatleta, codigomedico, codigomodalidade) SELECT NVL(MAX(CODIGO)+1, 0), to_date("+"'"+data+"', 'DD/MM/RRRR'), '"+resultado+"', "+ireprovado+", '"+passaporte+"', "+medico+", "+modalidade+" FROM EXAMEDOPING");
+			stmt.close();
 		}
 		else{
-			//try {
-				int ireprovado;
-				if(reprovado == true) ireprovado = 1;
-				else ireprovado = 0;
-				Statement stmt = c.createStatement();
-				stmt.execute("update examedoping set dataexame = to_date('" + data + " ', 'DD/MM/RRRR'), resultado = '" + resultado + " ', reprovado = " + ireprovado + ", passaporteatleta = '"+ passaporte + "', codigomedico = " + medico + ", codigomodalidade = "+ modalidade + " where codigo = "+ key);
-				System.out.println("update examedoping set dataexame = to_date('" + data + " ', 'DD/MM/RRRR'), resultado = '" + resultado + " ', reprovado = " + ireprovado + ", passaporteatleta = '"+ passaporte + "', codigomedico = " + medico + ", codigomodalidade = "+ modalidade + " where codigo = "+ key);
-				stmt.close();
-			//} catch (SQLException e) {
-				//e.printStackTrace();
-				//JOptionPane.showMessageDialog(null, e.getMessage());
-			//}
+			int ireprovado;
+			if(reprovado == true) ireprovado = 1;
+			else ireprovado = 0;
+			Statement stmt = c.createStatement();
+			stmt.execute("update examedoping set dataexame = to_date('" + data + " ', 'DD/MM/RRRR'), resultado = '" + resultado + " ', reprovado = " + ireprovado + ", passaporteatleta = '"+ passaporte + "', codigomedico = " + medico + ", codigomodalidade = "+ modalidade + " where codigo = "+ key);
+			System.out.println("update examedoping set dataexame = to_date('" + data + " ', 'DD/MM/RRRR'), resultado = '" + resultado + " ', reprovado = " + ireprovado + ", passaporteatleta = '"+ passaporte + "', codigomedico = " + medico + ", codigomodalidade = "+ modalidade + " where codigo = "+ key);
+			stmt.close();
 		}
 	}
 	
