@@ -45,7 +45,7 @@ public class AlterarDados {
 		frmAdicionar.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		JButton btnSalvar = new JButton("Salvar");
-		JLabel lblNewLabel = new JLabel("C\u00F3digo do diagn\u00F3stico");
+		JLabel lblNewLabel = new JLabel("C\u00F3digo do exame");
 		JLabel lblData = new JLabel("Data");
 		JLabel lblResultado = new JLabel("Resultado");
 		JCheckBox chckbxReprovado = new JCheckBox("Reprovado?");
@@ -63,7 +63,7 @@ public class AlterarDados {
 		
 		
 		
-		lblNewLabel.setBounds(23, 37, 112, 14);
+		lblNewLabel.setBounds(10, 37, 125, 14);
 		frmAdicionar.getContentPane().add(lblNewLabel);
 		
 		
@@ -71,7 +71,7 @@ public class AlterarDados {
 		frmAdicionar.getContentPane().add(lblData);
 		
 		
-		lblResultado.setBounds(23, 129, 70, 14);
+		lblResultado.setBounds(23, 129, 112, 14);
 		frmAdicionar.getContentPane().add(lblResultado);
 		
 		resultadoTextArea = new JTextArea();
@@ -100,15 +100,15 @@ public class AlterarDados {
 		
 		
 		JLabel lblPassaporte = new JLabel("Passaporte");
-		lblPassaporte.setBounds(256, 37, 62, 14);
+		lblPassaporte.setBounds(256, 37, 97, 14);
 		frmAdicionar.getContentPane().add(lblPassaporte);
 		
 		JLabel lblCodigoDoMdico = new JLabel("C\u00F3digo do m\u00E9dico");
-		lblCodigoDoMdico.setBounds(374, 37, 95, 14);
+		lblCodigoDoMdico.setBounds(374, 37, 111, 14);
 		frmAdicionar.getContentPane().add(lblCodigoDoMdico);
 		
 		JLabel lblNewLabel_1 = new JLabel("C\u00F3digo da modalidade");
-		lblNewLabel_1.setBounds(495, 37, 108, 14);
+		lblNewLabel_1.setBounds(495, 37, 132, 14);
 		frmAdicionar.getContentPane().add(lblNewLabel_1);
 		
 		JComboBox<String> passaporteComboBox = new JComboBox<String>();
