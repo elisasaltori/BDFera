@@ -194,7 +194,7 @@ public class MainWindow {
 		botaoInserir.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new AlterarDados(connection);
+				new AlterarDados(connection); //Insere nova tupla
 			}
 		});
 		botaoInserir.addActionListener(new ActionListener() {
@@ -215,7 +215,6 @@ public class MainWindow {
 				int row=tabelaExames.getSelectedRow();
 				if(row!=-1){
 					String str=(String)tabelaExames.getModel().getValueAt(row, 0); //Pega id do registro
-					//int id=Integer.parseInt(str);
 					new AlterarDados(connection, str);
 				}else{
 					JOptionPane.showMessageDialog(null, "Erro: nenhum item selecionado!");
@@ -237,7 +236,7 @@ public class MainWindow {
 				if(row!=-1){
 					String str=(String)tabelaExames.getModel().getValueAt(row, 0); //Pega id do registro
 					int id=Integer.parseInt(str);
-					deleteExam(id); //Remove registo do BD
+					deleteExam(id); //Remove registro do BD
 					updateTable();
 				}else{
 					JOptionPane.showMessageDialog(null, "Erro: nenhum item selecionado!");
@@ -300,7 +299,7 @@ public class MainWindow {
 		
 		
 		if(this.connection==null){
-			System.out.println("Conexao nao estabelecida!");
+			JOptionPane.showMessageDialog(null, "Erro na conexão! O programa será fechado!");
 			System.exit(2);
 		}
 		this.fillTable(); //Inicializa tabela com valores de ExameDoping

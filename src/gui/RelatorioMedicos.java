@@ -14,6 +14,10 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * Classe para geracao de relatorios referentes a medicos
+ *
+ */
 public class RelatorioMedicos extends ReportPanel{
 
 	/**

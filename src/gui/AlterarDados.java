@@ -23,10 +23,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JComboBox;
 
-
+/**
+ * Janela para insercao/alteracao de tuplas ExameDoping
+ *
+ */
 public class AlterarDados {
-	
-	
 	
 	private String resultado, data, passaporte, medico, modalidade;
 	private boolean reprovado;
@@ -60,8 +61,6 @@ public class AlterarDados {
 		frmAdicionar.getContentPane().setLayout(null);
 		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
 		frmAdicionar.setBounds((int)(dimension.getWidth()-366)/2, (int)(dimension.getHeight()-195)/2, 653, 301);
-		
-		
 		
 		lblNewLabel.setBounds(10, 37, 125, 14);
 		frmAdicionar.getContentPane().add(lblNewLabel);
@@ -132,14 +131,14 @@ public class AlterarDados {
 		
 		diagnosticoTextField = new JTextField();
 		
+		//Para insercao de uma nova dupla, obtem novo codigo identificador para ExameDoping 
 		if(key == null){
 			try{
 				Statement stmt;
 		        ResultSet rs;
 				stmt = c.createStatement();
-		        rs = stmt.executeQuery("select nvl(max(codigo)+1,0) as novocodigo from examedoping");
+		        rs = stmt.executeQuery("select nvl(max(codigo)+1,0) as novocodigo from examedoping"); //obtem maior codigo+1
 		        rs.next();
-		        System.out.println(rs.getString("novocodigo"));
 		        diagnosticoTextField.setText(rs.getString("novocodigo").toString());
 		    }catch(Exception e){
 		     	e.printStackTrace();
@@ -151,6 +150,7 @@ public class AlterarDados {
 		frmAdicionar.getContentPane().add(diagnosticoTextField);
 		diagnosticoTextField.setColumns(10);
 		
+		//Preenche lista de selecao de medicos
 		JComboBox<Object> medicoComboBox = new JComboBox<Object>();
 		try{
 			int index = 0;
@@ -168,6 +168,7 @@ public class AlterarDados {
 		medicoComboBox.setBounds(374, 62, 85, 20);
 		frmAdicionar.getContentPane().add(medicoComboBox);
 		
+		//Preenche lista de selecao de modalidades
 		JComboBox<String> modalidadeComboBox = new JComboBox<String>();
 		try{
 			int index = 0;
@@ -183,7 +184,7 @@ public class AlterarDados {
 	    }
 		modalidadeComboBox.setBounds(495, 62, 86, 20);
 		frmAdicionar.getContentPane().add(modalidadeComboBox);
-		if(key != null){
+		if(key != null){ 
 			diagnosticoTextField.setText(key);
 			try{
 				int index = 0;
@@ -210,7 +211,6 @@ public class AlterarDados {
 		}
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("Estou pressionado");
 				resultado = resultadoTextArea.getText();
 				reprovado = chckbxReprovado.isSelected();
 				passaporte = (String) passaporteComboBox.getSelectedItem();
@@ -224,12 +224,6 @@ public class AlterarDados {
 					JOptionPane.showMessageDialog(null, "Digite uma data no formato dd/MM/yyyy");
 					data = null;
 				}
-				System.out.println(data);
-				System.out.println(resultado);
-				System.out.println(reprovado);
-				System.out.println(passaporte);
-				System.out.println(medico);
-				System.out.println(modalidade);
 				frmAdicionar.setVisible(false);
 				try {
 					insertQuery(key);
@@ -245,16 +239,27 @@ public class AlterarDados {
 		
 	}
 	
+	/**
+	 * Cria janela para a insercao de uma nova tupla
+	 * @param connection conexao com o banco de dados
+	 */
 	public AlterarDados(Connection connection){
 		c = connection;
 		janelaAlterarDados(null);
 
-
 	}
+	
+	/**
+	 * Cria janela para a alteracao de uma tupla ja existente
+	 * @param connection conexao com o banco de dados
+	 * @param key chave da tupla a ser alterada
+	 */
 	public AlterarDados(Connection connection, String key){
 		c = connection;
 		janelaAlterarDados(key);
 	}
+	
+	//Insere nova tupla ou altera tupla existente
 	private void insertQuery(String key) throws SQLException{
 		if(key == null){
 			int ireprovado;
@@ -270,7 +275,6 @@ public class AlterarDados {
 			else ireprovado = 0;
 			Statement stmt = c.createStatement();
 			stmt.execute("update examedoping set dataexame = to_date('" + data + " ', 'DD/MM/RRRR'), resultado = '" + resultado + " ', reprovado = " + ireprovado + ", passaporteatleta = '"+ passaporte + "', codigomedico = " + medico + ", codigomodalidade = "+ modalidade + " where codigo = "+ key);
-			System.out.println("update examedoping set dataexame = to_date('" + data + " ', 'DD/MM/RRRR'), resultado = '" + resultado + " ', reprovado = " + ireprovado + ", passaporteatleta = '"+ passaporte + "', codigomedico = " + medico + ", codigomodalidade = "+ modalidade + " where codigo = "+ key);
 			stmt.close();
 		}
 	}

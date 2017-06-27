@@ -35,7 +35,6 @@ public abstract class ReportPanel extends JPanel {
 		model = new DefaultTableModel();
 		table = new JTable(model);
 		
-		//table.setEnabled(false);
 		table.setDefaultEditor(Object.class, null);
 		for (int i=0; i<Cols.length; i++)
 			model.addColumn(Cols[i]);

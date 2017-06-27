@@ -12,6 +12,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * Classe para geracao de relatorios referentes a atletas
+ *
+ */
 public class RelatorioAtletas extends ReportPanel {
 	
 	/**
@@ -53,10 +57,17 @@ public class RelatorioAtletas extends ReportPanel {
 		add(dropDownPanel);
 	}
 	
+	/**
+	 * Retorna titulo da tabela
+	 */
 	@Override
 	public String getTitle(){
 		return "Relatório atletas";
 	}
+	
+	/**
+	 * Retorna a descricao da tabela
+	 */
 	@Override
 	public String getDescription(){
 		String stringModalidade, stringMedico, stringTreinador;

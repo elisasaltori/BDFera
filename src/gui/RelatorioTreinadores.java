@@ -8,6 +8,10 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+/**
+ * Classe para geracao de relatorios referentes a treinadores e doping
+ *
+ */
 public class RelatorioTreinadores extends ReportPanel {
 
 	/**

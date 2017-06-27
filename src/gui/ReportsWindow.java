@@ -31,6 +31,10 @@ import com.itextpdf.text.FontFactory;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
+/**
+ * Janela principal para geracao de relatorios
+ *
+ */
 public class ReportsWindow {
 	
 	JFrame frame;
@@ -47,7 +51,6 @@ public class ReportsWindow {
         @Override
         public void actionPerformed(ActionEvent e) {
             JRadioButton btn = (JRadioButton) e.getSource();
-            System.out.println("Selected Button = " + btn.getText());
             
             for (int i=0; i<textosRelatorios.size(); i++){
             	if (textosRelatorios.elementAt(i) == btn.getText()){
@@ -60,6 +63,9 @@ public class ReportsWindow {
         }
 	};
 	
+	/**
+	 * Inicializa janela de relatorios
+	 */
 	private void initializeReportsPanel(){
 		reportsPanel = new JPanel();
 		reportsPanel.setLayout(new FlowLayout());
@@ -77,7 +83,7 @@ public class ReportsWindow {
 		generateButton.addActionListener(new ActionListener(){
 			@Override
 			
-			
+			//Gera PDF do relatorio
 			public void actionPerformed(ActionEvent e){
 				
 				ReportPanel thisReport = relatoriosPanels.elementAt(index);
@@ -93,6 +99,10 @@ public class ReportsWindow {
 		reportsPanel.add(generateButton);
 	}
 	
+	/**
+	 * Cria janela de relatorios
+	 * @param connection conexao com o banco de dados
+	 */
 	public ReportsWindow(Connection connection){
 		frame = new JFrame("Relatórios");
 		frame.setBounds(100,100,1000,500);
@@ -152,9 +162,17 @@ public class ReportsWindow {
 		frame.add(superPanel);
 		
 	}
-
+	
+	/**
+	 * Salva relatorio em um arquivo do tipo PDF
+	 * @param table tabela a partir da qual o relatorio sera gerado
+	 * @param titleString titulo do relatorio
+	 * @param introString introducao do relatorio
+	 * @return
+	 */
 	public static boolean writePDF(JTable table, String titleString, String introString) {
 	    Document document = new Document();
+	    //Seleciona local + nome para o arquivo
 	    try {
 	    	JFileChooser fileChooser = new JFileChooser();
 	    	FileNameExtensionFilter filter = new FileNameExtensionFilter("Portable Document Format", "pdf");
@@ -199,6 +217,10 @@ public class ReportsWindow {
 	    return true;
 	}
 	
+	/**
+	 * Funcao chamada para iniciar a janela
+	 * @param connection conexao com o banco de dados
+	 */
 	public static void runReportsWindow (Connection connection){
 		ReportsWindow rw = new ReportsWindow(connection);
 		rw.frame.setVisible(true);
